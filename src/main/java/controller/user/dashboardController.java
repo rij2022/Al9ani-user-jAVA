@@ -63,10 +63,10 @@ public class dashboardController implements Initializable {
 
     private final UserService us = new UserService();
     private UserModel userM;
-
+    List<UserModel> users;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<UserModel> users;
+
         btnSignout.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -144,14 +144,20 @@ public class dashboardController implements Initializable {
         Label f_name = (Label) node.lookup("#f_name");
         Label l_name = (Label) node.lookup("#l_name");
         Label userEmail = (Label) node.lookup("#email");
-
+        Button deleteU= (Button) node.lookup("#delete");
+        deleteU.setUserData(username);
+        deleteU.setOnAction(event -> deleteUser(username));
         usename.setText(username);
         userEmail.setText(email);
         f_name.setText(firstName);
         l_name.setText(lastName);
+        userEmail.setWrapText(true);
+        f_name.setWrapText(true);
+        l_name.setWrapText(true);
+        usename.setWrapText(true);
     }
     @FXML
-    private void deleteUser(ActionEvent event) {
+    private void deleteUser(String username) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Confirmation Dialog");
         alert.setHeaderText("Are you sure you want to delete this user?");
@@ -169,17 +175,16 @@ public class dashboardController implements Initializable {
 
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == buttonTypeYes) {
-            HBox item = (HBox) ((Button) event.getSource()).getParent();
-            Label usename = (Label) item.lookup("#usename");
-            String username = usename.getText();
+
             try {
                 us.delete(username);
-                pnItems.getChildren().remove(item);
+    reloadData();
                 alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Success");
                 alert.setHeaderText(null);
                 alert.setContentText("this account has been deleted successfully!");
                 alert.showAndWait();
+
 
 
             } catch (SQLException e) {
@@ -190,6 +195,35 @@ public class dashboardController implements Initializable {
                 alert.setContentText("An error occurred while deleting this account!");
                 alert.showAndWait();
             }
+        }
+    }
+    public void reloadData(){
+        pnItems.getChildren().clear();
+        try {
+            users = us.read();
+            for (int i = 0; i < users.size(); i++) {
+                final int j = i;
+                HBox node;
+                try {
+                    totalU.setText(String.valueOf(users.size()));
+                    node = FXMLLoader.load(getClass().getResource("/view/user/adminD/Item.fxml"));
+                    setUserInformation(node, users.get(i).getUsername(), users.get(i).getEmail(), users.get(i).getFirstName(), users.get(i).getLastName());
+                    pnItems.getChildren().add(node);
+
+                    // Give the items some effect
+                    node.setOnMouseEntered(event -> {
+                        node.setStyle("-fx-background-color : #ff374d");
+                    });
+                    node.setOnMouseExited(event -> {
+                        node.setStyle("-fx-background-color : #02030A");
+                    });
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }
