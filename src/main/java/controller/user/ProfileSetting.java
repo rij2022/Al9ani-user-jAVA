@@ -59,7 +59,6 @@ public class ProfileSetting implements Initializable {
 
             if (userM != null) {
                 firstNameU.setText(userM.getFirstName());
-                System.out.println(userM.getEmail());
                 LastNameU.setText(userM.getLastName());
                 emailU.setText(userM.getEmail());
             }
@@ -98,7 +97,6 @@ public class ProfileSetting implements Initializable {
      this.userM= us.readUser(username);
         if (userM != null) {
             firstNameU.setText(userM.getFirstName());
-            System.out.println(userM.getEmail());
             LastNameU.setText(userM.getLastName());
             emailU.setText(userM.getEmail());
         }

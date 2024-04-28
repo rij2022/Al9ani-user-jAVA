@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import utils.user.DataUtils;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ public class Main extends Application {
 
         // Set the scene to the stage and show the stage
         stage.setScene(scene);
+        stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("Welcome!");
         stage.setMinWidth(600);
         stage.setMaxHeight(400);

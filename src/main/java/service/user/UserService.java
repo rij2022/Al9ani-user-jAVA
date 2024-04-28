@@ -78,12 +78,14 @@ public class UserService implements IService <UserModel>{
         }
     }
     public boolean checkIfUsernameExists(String username) {
-        String query = "SELECT * FROM users WHERE username = ?";
+        String query = "SELECT username FROM users WHERE username = ?";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             ResultSet resultSet = statement.executeQuery();
-            System.out.println(resultSet.next());
-            return resultSet.next(); // Return true if username exists, false otherwise
+
+
+            return !resultSet.next();
+
         } catch (SQLException e) {
             System.err.println("Error while checking if username exists: " + e.getMessage());
             return false;
