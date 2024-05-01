@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.user.UserModel;
@@ -52,10 +53,14 @@ public class ProfileSetting implements Initializable {
 
     @FXML
     private Label newP;
+    @FXML
+    private ImageView openEye;
 
     @FXML
     private PasswordField newPass;
 
+    @FXML
+    private TextField newpshow;
     @FXML
     private Label oldP;
 
@@ -64,6 +69,9 @@ public class ProfileSetting implements Initializable {
 
     @FXML
     private Button reset;
+
+    @FXML
+    private Button resetP;
 
     @FXML
     private Pane resetPassword;
@@ -76,9 +84,12 @@ public class ProfileSetting implements Initializable {
 
     @FXML
     private Label user;
+    @FXML
+    private ImageView closedEye;
 
     @FXML
     private Pane userInfoP;
+
     private UserModel userM;
 
     public ProfileSetting() {
@@ -86,7 +97,42 @@ public class ProfileSetting implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        // Initially, show userInfoP and hide resetPassword
+        userInfoP.setVisible(true);
+        resetPassword.setVisible(false);
 
+        newpshow.setVisible(false);
+    openEye.setVisible(false);
+        closedEye.setVisible(true);
+        newPass.setVisible(true);
+openEye.setOnMouseExited(event->{
+    String pass=newpshow.getText();
+    newPass.setVisible(true);
+    closedEye.setVisible(true);
+    newPass.setText(pass);
+    newpshow.setVisible(false);
+    openEye.setVisible(false);
+});
+        closedEye.setOnMouseClicked(event->{
+            String pass=newPass.getText();
+            newPass.setVisible(false);
+            closedEye.setVisible(false);
+            newpshow.setText(pass);
+            newpshow.setVisible(true);
+            openEye.setVisible(true);
+        });
+
+
+        updateB.setOnAction(event -> {
+            userInfoP.setVisible(true);
+            resetPassword.setVisible(false);
+        });
+
+        resetP.setOnAction(event -> {
+            // Show resetPassword and hide userInfoP
+            userInfoP.setVisible(false);
+            resetPassword.setVisible(true);
+        });
 
 
             if (userM != null) {
@@ -124,6 +170,7 @@ public class ProfileSetting implements Initializable {
 
 
     }
+
 
     public void setUserInformation(String username) throws SQLException {
         user.setText("Welcome " + username);

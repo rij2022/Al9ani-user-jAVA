@@ -20,7 +20,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
    String username= us.autoLogin();
-     System.out.println("hereeee please "+us.autoLogin());
+
 
         if(username !=null){
             if (username.equals("admin")) {
@@ -35,7 +35,7 @@ public class Main extends Application {
                 Stage primaryStage = new Stage();
                 primaryStage.setScene(new Scene(root));
 
-                primaryStage.initStyle(StageStyle.UNDECORATED);
+
 
 
                 primaryStage.show();
@@ -44,7 +44,12 @@ public class Main extends Application {
             }else {
 
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/user/profilesetting.fxml"));
-                Parent root = loader.load();
+Parent root= null;
+                try {
+                    root = loader.load();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
                 ProfileSetting profileSetting = loader.getController();
                 try {
                     profileSetting.setUserInformation(username);
@@ -57,7 +62,7 @@ public class Main extends Application {
                 stage.setScene(scene);
                 stage.setTitle("Home");
                 stage.show();}
-
+return;
         }
         // Load the FXML file for the sign-in page
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/view/user/signup.fxml"));
@@ -66,10 +71,9 @@ public class Main extends Application {
 
         // Set the scene to the stage and show the stage
         stage.setScene(scene);
-        stage.initStyle(StageStyle.UNDECORATED);
+
         stage.setTitle("Welcome!");
-        stage.setMinWidth(600);
-        stage.setMaxHeight(400);
+
         stage.show();
 
         // Establish the database connection

@@ -24,7 +24,7 @@ public class UserService implements IService <UserModel>{
     public String autoLogin() {
         String username = prefs.get("username", null);
        // Assuming you store a hashed token instead of a plain password.
-     System.out.println("autologin function" + username);
+
         if (username != null ) {
             try {
                 UserModel user = readUser(username);
@@ -32,7 +32,7 @@ public class UserService implements IService <UserModel>{
                 // Here checkPassword should compare the hashed token with the hashed password stored in the database.
                 if (user != null ) {
   currentlyLoggedInUser=user;
-                    System.out.println("autologin function 2" + user.getUsername());
+
                     return  user.getUsername();
                 }
             } catch (SQLException e) {
@@ -132,7 +132,7 @@ public class UserService implements IService <UserModel>{
     }
     public void resetPassword(String newPassword)throws SQLException{
             String hashedPassword = PasswordHasher.hashPassword(newPassword);
-            String sql = "UPDATE users SET password = ? WHERE user_id = ?";
+            String sql = "UPDATE users SET password = ? WHERE id_user = ?";
             try (PreparedStatement ps = connection.prepareStatement(sql)) {
                 ps.setString(1, hashedPassword);
                 ps.setInt(2, currentlyLoggedInUser.getuserId());
