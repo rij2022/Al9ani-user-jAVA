@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.user.UserModel;
@@ -28,7 +29,8 @@ public class dashboardController implements Initializable {
     private VBox pnItems = null;
     @FXML
     private Button btnOverview;
-
+    @FXML
+    private TextField searchInput;
     @FXML
     private Button btnOrders;
 
@@ -72,6 +74,7 @@ public class dashboardController implements Initializable {
             public void handle(ActionEvent actionEvent) {
 
                 try {
+                    us.clearRememberedUser();
                     // Load the login.fxml file
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/user/signup.fxml"));
                     Parent root = loader.load();
@@ -99,15 +102,16 @@ public class dashboardController implements Initializable {
                 try {
                     totalU.setText(String.valueOf(users.size()));
                     node = FXMLLoader.load(getClass().getResource("/view/user/adminD/Item.fxml"));
+                    HBox.setHgrow(node, Priority.ALWAYS);
                     setUserInformation(node, users.get(i).getUsername(), users.get(i).getEmail(), users.get(i).getFirstName(), users.get(i).getLastName());
                     pnItems.getChildren().add(node);
 
                     // Give the items some effect
                     node.setOnMouseEntered(event -> {
-                        node.setStyle("-fx-background-color : #ff374d");
+                        node.setStyle("-fx-background-color : #EBE8F9");
                     });
                     node.setOnMouseExited(event -> {
-                        node.setStyle("-fx-background-color : #02030A");
+                        node.setStyle("-fx-background-color : white");
                     });
 
                 } catch (IOException e) {
@@ -129,7 +133,7 @@ public class dashboardController implements Initializable {
             pnlMenus.toFront();
         }
         if (actionEvent.getSource() == btnOverview) {
-            pnlOverview.setStyle("-fx-background-color : #02030A");
+            pnlOverview.setStyle("-fx-background-color : white");
             pnlOverview.toFront();
         }
         if (actionEvent.getSource() == btnOrders) {
@@ -140,21 +144,21 @@ public class dashboardController implements Initializable {
 
     // Set User Information
     private void setUserInformation(HBox node, String username, String email, String firstName, String lastName) {
-        Label usename = (Label) node.lookup("#usename");
+        Label usenameL = (Label) node.lookup("#usename");
         Label f_name = (Label) node.lookup("#f_name");
         Label l_name = (Label) node.lookup("#l_name");
         Label userEmail = (Label) node.lookup("#email");
         Button deleteU= (Button) node.lookup("#delete");
         deleteU.setUserData(username);
         deleteU.setOnAction(event -> deleteUser(username));
-        usename.setText(username);
+        usenameL.setText(username);
         userEmail.setText(email);
         f_name.setText(firstName);
         l_name.setText(lastName);
         userEmail.setWrapText(true);
         f_name.setWrapText(true);
         l_name.setWrapText(true);
-        usename.setWrapText(true);
+        usenameL.setWrapText(true);
     }
     @FXML
     private void deleteUser(String username) {
@@ -212,10 +216,10 @@ public class dashboardController implements Initializable {
 
                     // Give the items some effect
                     node.setOnMouseEntered(event -> {
-                        node.setStyle("-fx-background-color : #ff374d");
+                        node.setStyle("-fx-background-color : #EBE8F9");
                     });
                     node.setOnMouseExited(event -> {
-                        node.setStyle("-fx-background-color : #02030A");
+                        node.setStyle("-fx-background-color : white");
                     });
 
                 } catch (IOException e) {

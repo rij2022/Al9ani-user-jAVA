@@ -9,8 +9,10 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.user.UserModel;
+import service.user.PasswordHasher;
 import service.user.UserService;
 
 import java.io.IOException;
@@ -19,8 +21,14 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static service.user.UserService.currentlyLoggedInUser;
+
 public class ProfileSetting implements Initializable {
     private final UserService us = new UserService();
+
+    @FXML
+    private Label Confirm;
+
     @FXML
     private Button DeleteB;
 
@@ -29,6 +37,9 @@ public class ProfileSetting implements Initializable {
 
     @FXML
     private Button Save;
+
+    @FXML
+    private PasswordField confirmPass;
 
     @FXML
     private TextField emailU;
@@ -40,6 +51,24 @@ public class ProfileSetting implements Initializable {
     private Button logoutB;
 
     @FXML
+    private Label newP;
+
+    @FXML
+    private PasswordField newPass;
+
+    @FXML
+    private Label oldP;
+
+    @FXML
+    private PasswordField oldPass;
+
+    @FXML
+    private Button reset;
+
+    @FXML
+    private Pane resetPassword;
+
+    @FXML
     private Button showB;
 
     @FXML
@@ -47,6 +76,9 @@ public class ProfileSetting implements Initializable {
 
     @FXML
     private Label user;
+
+    @FXML
+    private Pane userInfoP;
     private UserModel userM;
 
     public ProfileSetting() {
@@ -69,6 +101,7 @@ public class ProfileSetting implements Initializable {
             public void handle(ActionEvent actionEvent) {
 
                 try {
+                    us.clearRememberedUser();
                     // Load the login.fxml file
                     FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/user/signup.fxml"));
                     Parent root = loader.load();
@@ -185,6 +218,53 @@ public class ProfileSetting implements Initializable {
                 e.printStackTrace();
             }
         }}
+    @FXML
+    void reset(ActionEvent event){
+        // Retrieve the password values
+        String oldPassword = oldPass.getText();
+        String newPassword = newPass.getText();
+        String confirmPassword = confirmPass.getText();
+
+        // Check if any of the fields are empty
+        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            us.showAlert(Alert.AlertType.ERROR, "Error", "All fields must be filled.");
+            return;
+        }
+
+        // Check if the old password is correct
+        if(!PasswordHasher.checkPassword(oldPassword, currentlyLoggedInUser.getPassword())) {
+            us.showAlert(Alert.AlertType.ERROR, "Error", "The old password is incorrect.");
+            return;
+        }
+
+        // Check if the new password is at least 3 characters long
+        if (newPassword.length() < 3) {
+            us.showAlert(Alert.AlertType.ERROR, "Error", "The new password must be at least 3 characters long.");
+            return;
+        }
+
+        // Check if new password and confirm password match
+        if (!newPassword.equals(confirmPassword)) {
+            us.showAlert(Alert.AlertType.ERROR, "Error", "The new passwords do not match.");
+            return;
+        }
+
+        // Update the password
+        try {
+            currentlyLoggedInUser.setPassword(newPassword);
+            // Assuming you have a method in UserService to update the user in the database
+            us.resetPassword(newPassword);
+            us.showAlert(Alert.AlertType.INFORMATION, "Success", "Password updated successfully.");
+
+            oldPass.clear();
+            newPass.clear();
+            confirmPass.clear();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            us.showAlert(Alert.AlertType.ERROR, "Database Error", "Error updating password: " + e.getMessage());
+        }
+    }
 
     public void setUserModel(UserModel userModel) {
         this.userM=userModel;
