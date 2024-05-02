@@ -3,10 +3,12 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -15,11 +17,19 @@ import model.user.UserModel;
 import service.user.UserService;
 
 import java.io.IOException;
+import java.net.URL;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
-public class SignUpController {
+public class SignUpController implements Initializable {
     private UserModel userModel;
+    @FXML
+    private ImageView closedEye;
+    @FXML
+    private TextField newpshow;
 
+    @FXML
+    private ImageView openEye;
     @FXML
     private TextField FirstNameS;
 
@@ -287,5 +297,30 @@ public class SignUpController {
     }
     public void setUserModel(UserModel userModel) {
         this.userModel=userModel;
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        newpshow.setVisible(false);
+        openEye.setVisible(false);
+        closedEye.setVisible(true);
+        tf_password.setVisible(true);
+
+        openEye.setOnMouseExited(event->{
+            String pass=newpshow.getText();
+            tf_password.setVisible(true);
+            closedEye.setVisible(true);
+            tf_password.setText(pass);
+            newpshow.setVisible(false);
+            openEye.setVisible(false);
+        });
+        closedEye.setOnMouseClicked(event->{
+            String pass=tf_password.getText();
+            tf_password.setVisible(false);
+            closedEye.setVisible(false);
+            newpshow.setText(pass);
+            newpshow.setVisible(true);
+            openEye.setVisible(true);
+        });
     }
 }

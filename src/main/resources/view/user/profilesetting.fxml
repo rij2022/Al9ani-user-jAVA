@@ -270,12 +270,12 @@
                                     </AnchorPane>
                                     <AnchorPane>
                                        <children>
-                                          <ImageView fx:id="openEye" fitHeight="19.0" fitWidth="24.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="openEye" fitHeight="19.0" fitWidth="24.0" layoutX="7.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@img/open_eye.png" />
                                              </image>
                                           </ImageView>
-                                          <ImageView fx:id="closedEye" fitHeight="19.0" fitWidth="24.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                                          <ImageView fx:id="closedEye" fitHeight="19.0" fitWidth="24.0" layoutX="7.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true" visible="false">
                                              <image>
                                                 <Image url="@img/closeeye.png" />
                                              </image>
